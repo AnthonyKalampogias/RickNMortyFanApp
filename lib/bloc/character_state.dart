@@ -6,25 +6,29 @@ class CharacterState extends Equatable {
   const CharacterState({
     this.status = Status.initial,
     this.pageInfo,
+    this.characters = const <Character>[],
     this.hasReachedMax = false,
   });
 
   final Status status;
-  final ApiPage? pageInfo;
+  final List<Character> characters;
+  final Info? pageInfo;
   final bool hasReachedMax;
 
   CharacterState newPageInfo({
     Status? status,
-    ApiPage? pageInfo,
+    List<Character>? characters,
+    Info? pageInfo,
     bool? hasReachedMax,
   }) {
     return CharacterState(
       status: status ?? this.status,
       pageInfo: pageInfo ?? this.pageInfo,
+      characters: this.characters != characters ? characters! : this.characters,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
   }
 
   @override
-  List<Object> get props => [status, pageInfo!, hasReachedMax];
+  List<Object> get props => [status, hasReachedMax];
 }

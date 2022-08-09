@@ -5,4 +5,8 @@ abstract class CharacterEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class CharacterFetched extends CharacterEvent {}
+class FetchPage extends CharacterEvent {}
+
+class PreviousPage extends FetchPage {}
+
+class NextPage extends FetchPage {}

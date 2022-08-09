@@ -20,53 +20,88 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 
 class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   CharacterBloc({required this.httpClient}) : super(const CharacterState()) {
-    on<CharacterFetched>(
-      _onPostFetched,
-      transformer: throttleDroppable(throttleDuration),
-    );
+    on<PreviousPage>(_fetchPreviousPage,
+        transformer: throttleDroppable(throttleDuration));
+    on<NextPage>(_fetchNextPage,
+        transformer: throttleDroppable(throttleDuration));
   }
 
   final http.Client httpClient;
 
-  Future<void> _onPostFetched(
-      CharacterFetched event, Emitter<CharacterState> emit) async {
-    if (state.hasReachedMax) return;
+  void _fetchPreviousPage(FetchPage event, Emitter<CharacterState> emit) async {
     try {
-      if (state.status == Status.initial) {
-        final apiPage = await _fetchPage(0);
+      var page = state.pageInfo;
+
+      if (page == null) {
+        final newPage = await _fetchPage(1);
         return emit(
           state.newPageInfo(
             status: Status.success,
-            pageInfo: apiPage,
+            pageInfo: newPage.info,
+            characters: List.of(state.characters)..addAll(newPage.results!),
             hasReachedMax: false,
           ),
         );
       }
-      final newPage = await _fetchPage(state.pageInfo!.results!.length);
-      newPage.info?.next ==
-              null // if the page info says there is no next page, set hasReachedMax to true
+
+      var requestedPage = _getLinkPage(page.prev!);
+
+      final newPage = await _fetchPage(requestedPage);
+      if (newPage.info?.next == null) {
+        return emit(state.newPageInfo(hasReachedMax: true));
+      } else {
+        return emit(
+          state.newPageInfo(
+            status: Status.success,
+            pageInfo: newPage.info,
+            characters: List.of(state.characters)..addAll(newPage.results!),
+            hasReachedMax: false,
+          ),
+        );
+      }
+    } catch (e) {
+      emit(state.newPageInfo(status: Status.failure));
+    }
+  }
+
+  void _fetchNextPage(FetchPage event, Emitter<CharacterState> emit) async {
+    try {
+      var page = state.pageInfo;
+
+      if (page == null) {
+        final newPage = await _fetchPage(1);
+        return emit(
+          state.newPageInfo(
+            status: Status.success,
+            pageInfo: newPage.info,
+            characters: List.of(state.characters)..addAll(newPage.results!),
+            hasReachedMax: false,
+          ),
+        );
+      }
+
+      var requestedPage = _getLinkPage(page.next!);
+
+      final newPage = await _fetchPage(requestedPage);
+      (newPage.info?.next == null)
           ? emit(state.newPageInfo(hasReachedMax: true))
           : emit(
               state.newPageInfo(
                 status: Status.success,
-                pageInfo: newPage,
+                pageInfo: newPage.info,
+                characters: List.of(state.characters)..addAll(newPage.results!),
                 hasReachedMax: false,
               ),
             );
-    } catch (_) {
+    } catch (e) {
       emit(state.newPageInfo(status: Status.failure));
     }
   }
 
   Future<ApiPage> _fetchPage(int page) async {
     try {
-      var response = await httpClient.get(
-        Uri.https(
-          'https://rickandmortyapi.com',
-          '/api/character',
-          <String, int>{'page': page},
-        ),
-      );
+      var response = await http.get(
+          Uri.parse("https://rickandmortyapi.com/api/character/?page=$page"));
       // Check if status code anything but 200 (OK)
       if (response.statusCode != 200) {
         throw Exception('error fetching newPage');
@@ -95,5 +130,11 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     } catch (e) {
       throw Exception('error fetching newPage');
     }
+  }
+
+  /// Helper method to extract the int of the page from the URL
+  /// https://rickandmortyapi.com/api/character/?page= -> 19 <-
+  int _getLinkPage(String link) {
+    return int.parse(Uri.dataFromString(link).queryParameters['page']!);
   }
 }
