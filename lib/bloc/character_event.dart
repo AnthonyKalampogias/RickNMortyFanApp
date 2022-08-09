@@ -1,6 +1,6 @@
 part of 'character_bloc.dart';
 
-abstract class CharacterEvent extends Equatable {
+abstract class CharacterEvent {
   @override
   List<Object> get props => [];
 }

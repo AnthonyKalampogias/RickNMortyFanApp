@@ -47,18 +47,17 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
       var requestedPage = _getLinkPage(page.prev!);
 
       final newPage = await _fetchPage(requestedPage);
-      if (newPage.info?.next == null) {
-        return emit(state.newPageInfo(hasReachedMax: true));
-      } else {
-        return emit(
-          state.newPageInfo(
-            status: Status.success,
-            pageInfo: newPage.info,
-            characters: List.of(state.characters)..addAll(newPage.results!),
-            hasReachedMax: false,
-          ),
-        );
-      }
+
+      var newState = state.newPageInfo(
+        status: Status.success,
+        pageInfo: newPage.info,
+        characters: newPage.results!,
+        hasReachedMax: false,
+      );
+
+      newPage.info?.next == null
+          ? emit(state.newPageInfo(hasReachedMax: true))
+          : emit(newState);
     } catch (e) {
       emit(state.newPageInfo(status: Status.failure));
     }
@@ -83,16 +82,17 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
       var requestedPage = _getLinkPage(page.next!);
 
       final newPage = await _fetchPage(requestedPage);
+
+      var newState = state.newPageInfo(
+        status: Status.success,
+        pageInfo: newPage.info,
+        characters: newPage.results!,
+        hasReachedMax: false,
+      );
+
       (newPage.info?.next == null)
           ? emit(state.newPageInfo(hasReachedMax: true))
-          : emit(
-              state.newPageInfo(
-                status: Status.success,
-                pageInfo: newPage.info,
-                characters: List.of(state.characters)..addAll(newPage.results!),
-                hasReachedMax: false,
-              ),
-            );
+          : emit(newState);
     } catch (e) {
       emit(state.newPageInfo(status: Status.failure));
     }

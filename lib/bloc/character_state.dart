@@ -2,7 +2,7 @@ part of 'character_bloc.dart';
 
 enum Status { initial, success, failure }
 
-class CharacterState extends Equatable {
+class CharacterState {
   const CharacterState({
     this.status = Status.initial,
     this.pageInfo,
@@ -24,7 +24,7 @@ class CharacterState extends Equatable {
     return CharacterState(
       status: status ?? this.status,
       pageInfo: pageInfo ?? this.pageInfo,
-      characters: this.characters != characters ? characters! : this.characters,
+      characters: characters ?? this.characters,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
   }

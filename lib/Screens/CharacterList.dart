@@ -14,6 +14,7 @@ class CharactersList extends StatefulWidget {
 class _CharactersListState extends State<CharactersList> {
   @override
   void initState() {
+    print("Build");
     super.initState();
   }
 
@@ -26,6 +27,8 @@ class _CharactersListState extends State<CharactersList> {
           switch (state.status) {
             case Status.failure:
               return const Center(child: Text('failed to fetch Characters'));
+            case Status.initial:
+              return const Loading();
             case Status.success:
               if (state.pageInfo == null) {
                 return const Center(child: Text('no Characters'));
@@ -60,13 +63,9 @@ class _CharactersListState extends State<CharactersList> {
                               tooltip: 'Previous Page',
                               onPressed: state.pageInfo?.prev == null
                                   ? null
-                                  : () {
-                                      setState(() {
-                                        context
-                                            .read<CharacterBloc>()
-                                            .add(PreviousPage());
-                                      });
-                                    },
+                                  : () => context
+                                      .read<CharacterBloc>()
+                                      .add(PreviousPage()),
                             ),
                           ],
                         ),
@@ -76,16 +75,13 @@ class _CharactersListState extends State<CharactersList> {
                         Column(
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.skip_previous),
-                              disabledColor: Colors.grey[600],
-                              color: Colors.grey[900],
-                              tooltip: 'Next Page',
-                              onPressed: () {
-                                setState(() {
+                                icon: const Icon(Icons.skip_previous),
+                                disabledColor: Colors.grey[600],
+                                color: Colors.grey[900],
+                                tooltip: 'Next Page',
+                                onPressed: () {
                                   context.read<CharacterBloc>().add(NextPage());
-                                });
-                              },
-                            ),
+                                }),
                           ],
                         )
                       ],
@@ -93,8 +89,6 @@ class _CharactersListState extends State<CharactersList> {
                   )
                 ],
               );
-            case Status.initial:
-              return const Loading();
           }
         },
       ),
