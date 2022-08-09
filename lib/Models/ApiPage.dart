@@ -1,12 +1,13 @@
 import 'package:rick_n_morty_fan_app/Models/Characters.dart';
 
-class Page {
+//names Page and Pages are in use
+class ApiPage {
   Info? info;
   List<Character>? results;
 
-  Page({this.info, this.results});
+  ApiPage({this.info, this.results});
 
-  Page.fromJson(Map<String, dynamic> json) {
+  ApiPage.fromJson(Map<String, dynamic> json) {
     info = json['info'] != null ? new Info.fromJson(json['info']) : null;
     if (json['results'] != null) {
       results = <Character>[];
