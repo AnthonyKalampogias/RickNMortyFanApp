@@ -1,4 +1,4 @@
-import 'package:rick_n_morty_fan_app/Models/Characters.dart';
+import 'package:rick_n_morty_fan_app/Models/Character.dart';
 
 //names Page and Pages are in use
 class ApiPage {
