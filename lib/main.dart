@@ -34,6 +34,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-///TODOS
-// Make Pop Up / 2nd page with Character/Episode Info
