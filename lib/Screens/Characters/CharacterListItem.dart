@@ -22,7 +22,7 @@ class CharacterListItem extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           child: Container(
             color: Colors.blueGrey[600],
-            height: 120,
+            height: 140,
             child: Row(children: [
               Expanded(
                 flex: 6,
@@ -37,7 +37,7 @@ class CharacterListItem extends StatelessWidget {
                 flex: 1,
               ),
               Expanded(
-                flex: 14,
+                flex: 15,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
