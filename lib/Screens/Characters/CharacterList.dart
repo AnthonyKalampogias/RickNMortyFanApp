@@ -44,7 +44,7 @@ class _CharactersListState extends State<CharactersList> {
                         controller: _scrollController,
                         itemBuilder: (BuildContext context, int index) {
                           return Container(
-                            padding: const EdgeInsets.all(15.0),
+                            padding: const EdgeInsets.all(10),
                             child: CharacterListItem(
                                 character: state.characters[index]),
                           );

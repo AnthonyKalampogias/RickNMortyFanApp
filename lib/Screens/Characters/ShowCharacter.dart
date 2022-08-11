@@ -20,90 +20,83 @@ class _ShowCharacterState extends State<ShowCharacter> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              BlocProvider(
-                create: (_) => CharacterBloc()..add(FetchCharacter(widget.id)),
-                child: Builder(
-                  builder: (context) =>
-                      (BlocBuilder<CharacterBloc, CharacterState>(
-                          builder: (context, state) {
-                    return state.character == null
-                        ? const Loading()
-                        : Center(
-                            child: Stack(children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: Text(
-                                      state.character!.name!,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white,
+              Column(children: [
+                BlocProvider(
+                  create: (_) =>
+                      CharacterBloc()..add(FetchCharacter(widget.id)),
+                  child: Builder(
+                    builder: (context) =>
+                        (BlocBuilder<CharacterBloc, CharacterState>(
+                            builder: (context, state) {
+                      return state.character == null
+                          ? const Loading()
+                          : Center(
+                              child: Stack(children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Text(
+                                        state.character!.name!,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                    child: FittedBox(
-                                        fit: BoxFit.cover,
-                                        child: Image.network(
-                                            state.character!.image!)),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    child: RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          WidgetSpan(
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  right: 5),
-                                              child: Icon(
-                                                Icons.circle,
-                                                size: 14,
-                                                color: state.character!
-                                                            .status! ==
-                                                        'Alive'
-                                                    ? Colors.green
-                                                    : state.character!.status ==
-                                                            'Dead'
-                                                        ? Colors.red
-                                                        : Colors.grey,
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 10, 0, 10),
+                                      child: FittedBox(
+                                          fit: BoxFit.cover,
+                                          child: Image.network(
+                                              state.character!.image!)),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            WidgetSpan(
+                                              child: Container(
+                                                margin: const EdgeInsets.only(
+                                                    right: 5),
+                                                child: Icon(
+                                                  Icons.circle,
+                                                  size: 14,
+                                                  color: state.character!
+                                                              .status! ==
+                                                          'Alive'
+                                                      ? Colors.green
+                                                      : state.character!
+                                                                  .status ==
+                                                              'Dead'
+                                                          ? Colors.red
+                                                          : Colors.grey,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          TextSpan(
-                                            text:
-                                                '${state.character!.status} ~ ${state.character!.gender}',
-                                          ),
-                                        ],
+                                            TextSpan(
+                                              text:
+                                                  '${state.character!.status} ~ ${state.character!.gender}',
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Positioned(
-                                      child: Container(
-                                          color: Colors.blueGrey[800],
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 5, 0, 5),
-                                          width: double.infinity,
-                                          //TODO work like CharList -> CharListItem
-                                          child: CharacterDetails(
-                                              char: state.character!)),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ]),
-                          );
-                  })),
+                                    CharacterDetails(char: state.character!),
+                                  ],
+                                ),
+                              ]),
+                            );
+                    })),
+                  ),
                 ),
-              ),
+              ]),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                 child: ElevatedButton(
