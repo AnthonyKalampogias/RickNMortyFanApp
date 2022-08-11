@@ -1,11 +1,11 @@
-part of 'character_bloc.dart';
+part of 'pages_bloc.dart';
 
-abstract class CharacterEvent {
+abstract class PagesEvent {
   @override
   List<Object> get props => [];
 }
 
-class FetchPage extends CharacterEvent {}
+class FetchPage extends PagesEvent {}
 
 class PreviousPage extends FetchPage {}
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rick_n_morty_fan_app/bloc/character_bloc.dart';
+import 'package:rick_n_morty_fan_app/bloc/page_blocs/pages_bloc.dart';
 import 'CharacterListItem.dart';
 import '../Shared/Loading.dart';
 
@@ -21,7 +21,7 @@ class _CharactersListState extends State<CharactersList> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey[900],
-      body: BlocBuilder<CharacterBloc, CharacterState>(
+      body: BlocBuilder<PageBloc, PageState>(
         builder: (context, state) {
           switch (state.status) {
             case Status.failure:
@@ -41,7 +41,7 @@ class _CharactersListState extends State<CharactersList> {
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemBuilder: (BuildContext context, int index) {
-                          return Padding(
+                          return Container(
                             padding: const EdgeInsets.all(15.0),
                             child: CharacterListItem(
                                 character: state.characters[index]),
@@ -63,7 +63,7 @@ class _CharactersListState extends State<CharactersList> {
                               onPressed: state.pageInfo?.prev == null
                                   ? null
                                   : () => context
-                                      .read<CharacterBloc>()
+                                      .read<PageBloc>()
                                       .add(PreviousPage()),
                             ),
                           ],
@@ -81,7 +81,7 @@ class _CharactersListState extends State<CharactersList> {
                                 onPressed: state.pageInfo?.next == null
                                     ? null
                                     : () => context
-                                        .read<CharacterBloc>()
+                                        .read<PageBloc>()
                                         .add(NextPage())),
                           ],
                         )

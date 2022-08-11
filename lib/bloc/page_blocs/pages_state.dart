@@ -1,9 +1,9 @@
-part of 'character_bloc.dart';
+part of 'pages_bloc.dart';
 
 enum Status { initial, success, failure }
 
-class CharacterState {
-  const CharacterState({
+class PageState {
+  const PageState({
     this.status = Status.initial,
     this.pageInfo,
     this.characters = const <Character>[],
@@ -15,13 +15,13 @@ class CharacterState {
   final Info? pageInfo;
   final bool hasReachedMax;
 
-  CharacterState newPageInfo({
+  PageState newPageInfo({
     Status? status,
     List<Character>? characters,
     Info? pageInfo,
     bool? hasReachedMax,
   }) {
-    return CharacterState(
+    return PageState(
       status: status ?? this.status,
       pageInfo: pageInfo ?? this.pageInfo,
       characters: characters ?? this.characters,
