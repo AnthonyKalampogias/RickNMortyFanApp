@@ -7,6 +7,7 @@ class ApiPage {
 
   ApiPage({this.info, this.results});
 
+  //Method that maps the provided JSON to ApiPage object
   ApiPage.fromJson(Map<String, dynamic> json) {
     info = json['info'] != null ? new Info.fromJson(json['info']) : null;
     if (json['results'] != null) {

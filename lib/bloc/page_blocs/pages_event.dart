@@ -1,7 +1,6 @@
 part of 'pages_bloc.dart';
 
 abstract class PagesEvent {
-  @override
   List<Object> get props => [];
 }
 

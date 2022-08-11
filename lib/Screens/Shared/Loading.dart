@@ -7,13 +7,17 @@ class Loading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        children: const [
-          SizedBox(
-            height: 24,
-            width: 24,
-            child: CircularProgressIndicator(strokeWidth: 1.5),
+        children: [
+          Container(
+            height: 100,
+            width: 100,
+            margin: const EdgeInsets.fromLTRB(0, 150, 0, 25),
+            child: Image.asset('assets/images/giphy.gif'),
           ),
-          Text("Loading...")
+          const Text(
+            "Loading...",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          )
         ],
       ),
     );

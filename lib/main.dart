@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rick_n_morty_fan_app/Screens/Pager.dart';
+import 'package:rick_n_morty_fan_app/Screens/Shared/errorPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,13 +21,19 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: Pager(),
+      home: const Pager(),
+      builder: (context, widget) {
+        Widget error = ErrorPage(error: '');
+        if (widget is Scaffold || widget is Navigator) {
+          error = Scaffold(body: Center(child: error));
+        }
+        ErrorWidget.builder = (errorDetails) => error;
+        if (widget != null) return widget;
+        throw ('widget is null');
+      },
     );
   }
 }
 
 ///TODOS
-// Create 1st Page with the main list showing the tiles
-  // make it paginated
 // Make Pop Up / 2nd page with Character/Episode Info
-// Add loading indicators while awaiting Futures to complete

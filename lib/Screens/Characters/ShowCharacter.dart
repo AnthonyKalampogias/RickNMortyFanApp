@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rick_n_morty_fan_app/Screens/Characters/CharacterDetails.dart';
 import 'package:rick_n_morty_fan_app/Screens/Shared/Loading.dart';
-import 'package:rick_n_morty_fan_app/bloc/character_bloc/bloc/character_bloc.dart';
-import 'package:rick_n_morty_fan_app/bloc/page_blocs/pages_bloc.dart';
+import 'package:rick_n_morty_fan_app/bloc/character_bloc/character_bloc.dart';
 
 class ShowCharacter extends StatefulWidget {
-  const ShowCharacter({Key? key}) : super(key: key);
-
+  ShowCharacter({Key? key, required this.id}) : super(key: key);
+  late int id;
   @override
   State<ShowCharacter> createState() => _ShowCharacterState();
 }
@@ -16,22 +14,115 @@ class ShowCharacter extends StatefulWidget {
 class _ShowCharacterState extends State<ShowCharacter> {
   @override
   Widget build(BuildContext context) {
-    print('mpika');
-    context.read<CharacterBloc>();
     return Scaffold(
-      backgroundColor: Colors.blueGrey[900],
-      body: Container(child:
-          BlocBuilder<CharacterBloc, CharacterState>(builder: (context, state) {
-        return state.character == null
-            ? const Loading()
-            : Column(
-                children: [
-                  Text('${state.character?.id}'),
-                  Text('${state.character?.name}'),
-                  Image.network('${state.character?.image}')
-                ],
-              );
-      })),
-    );
+        backgroundColor: Colors.blueGrey[900],
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              BlocProvider(
+                create: (_) => CharacterBloc()..add(FetchCharacter(widget.id)),
+                child: Builder(
+                  builder: (context) =>
+                      (BlocBuilder<CharacterBloc, CharacterState>(
+                          builder: (context, state) {
+                    return state.character == null
+                        ? const Loading()
+                        : Center(
+                            child: Stack(children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      state.character!.name!,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                    child: FittedBox(
+                                        fit: BoxFit.cover,
+                                        child: Image.network(
+                                            state.character!.image!)),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 10),
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          WidgetSpan(
+                                            child: Container(
+                                              margin: const EdgeInsets.only(
+                                                  right: 5),
+                                              child: Icon(
+                                                Icons.circle,
+                                                size: 14,
+                                                color: state.character!
+                                                            .status! ==
+                                                        'Alive'
+                                                    ? Colors.green
+                                                    : state.character!.status ==
+                                                            'Dead'
+                                                        ? Colors.red
+                                                        : Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                '${state.character!.status} ~ ${state.character!.gender}',
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Positioned(
+                                      child: Container(
+                                          color: Colors.blueGrey[800],
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 5, 0, 5),
+                                          width: double.infinity,
+                                          //TODO work like CharList -> CharListItem
+                                          child: CharacterDetails(
+                                              char: state.character!)),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ]),
+                          );
+                  })),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      fixedSize: const Size(300, 50),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50))),
+                  child: const Text(
+                    "Back to list",
+                    style: TextStyle(color: Colors.black, fontSize: 25),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }

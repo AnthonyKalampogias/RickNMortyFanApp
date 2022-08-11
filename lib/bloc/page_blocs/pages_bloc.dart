@@ -4,8 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:http/http.dart' as http;
 import 'package:rick_n_morty_fan_app/Models/ApiPage.dart';
-import 'package:stream_transform/stream_transform.dart';
 import 'package:rick_n_morty_fan_app/Models/Character.dart';
+import 'package:stream_transform/stream_transform.dart';
 part 'pages_event.dart';
 part 'pages_state.dart';
 
@@ -18,7 +18,7 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 }
 
 class PageBloc extends Bloc<PagesEvent, PageState> {
-  PageBloc({required this.httpClient}) : super(const PageState()) {
+  PageBloc({required this.httpClient}) : super(PageState()) {
     on<PreviousPage>(_fetchPreviousPage,
         transformer: throttleDroppable(throttleDuration));
     on<NextPage>(_fetchNextPage,
@@ -27,7 +27,8 @@ class PageBloc extends Bloc<PagesEvent, PageState> {
 
   final http.Client httpClient;
 
-  void _fetchPreviousPage(FetchPage event, Emitter<PageState> emit) async {
+  Future<void> _fetchPreviousPage(
+      FetchPage event, Emitter<PageState> emit) async {
     try {
       var page = state.pageInfo;
 
@@ -44,37 +45,33 @@ class PageBloc extends Bloc<PagesEvent, PageState> {
       }
 
       var requestedPage = _getLinkPage(page.prev!);
-
       final newPage = await _fetchPage(requestedPage);
 
-      var newState = state.newPageInfo(
-        status: Status.success,
-        pageInfo: newPage.info,
-        characters: newPage.results!,
-        hasReachedMax: false,
-      );
-
-      newPage.info?.next == null
-          ? emit(state.newPageInfo(hasReachedMax: true))
-          : emit(newState);
+      emit(state.newPageInfo(
+          status: Status.success,
+          pageInfo: newPage.info,
+          characters: newPage.results!,
+          hasReachedMax: newPage.info?.count == requestedPage ? true : false,
+          currentPage: requestedPage));
     } catch (e) {
       emit(state.newPageInfo(status: Status.failure));
     }
   }
 
-  void _fetchNextPage(FetchPage event, Emitter<PageState> emit) async {
+  Future<void> _fetchNextPage(FetchPage event, Emitter<PageState> emit) async {
     try {
       var page = state.pageInfo;
 
-      if (page == null) {
+      // if there is no data in the state, request the first page
+      if (page == null || state.status == Status.initial) {
         final newPage = await _fetchPage(1);
         return emit(
           state.newPageInfo(
-            status: Status.success,
-            pageInfo: newPage.info,
-            characters: List.of(state.characters)..addAll(newPage.results!),
-            hasReachedMax: false,
-          ),
+              status: Status.success,
+              pageInfo: newPage.info,
+              characters: List.of(state.characters)..addAll(newPage.results!),
+              hasReachedMax: false,
+              currentPage: 1),
         );
       }
 
@@ -82,16 +79,12 @@ class PageBloc extends Bloc<PagesEvent, PageState> {
 
       final newPage = await _fetchPage(requestedPage);
 
-      var newState = state.newPageInfo(
-        status: Status.success,
-        pageInfo: newPage.info,
-        characters: newPage.results!,
-        hasReachedMax: false,
-      );
-
-      (newPage.info?.next == null)
-          ? emit(state.newPageInfo(hasReachedMax: true))
-          : emit(newState);
+      emit(state.newPageInfo(
+          status: Status.success,
+          pageInfo: newPage.info,
+          characters: newPage.results!,
+          hasReachedMax: newPage.info?.count == requestedPage ? true : false,
+          currentPage: requestedPage));
     } catch (e) {
       emit(state.newPageInfo(status: Status.failure));
     }

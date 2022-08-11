@@ -26,6 +26,7 @@ class Character {
       this.url,
       this.created});
 
+  //Method that maps the provided JSON to Character object
   Character.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];

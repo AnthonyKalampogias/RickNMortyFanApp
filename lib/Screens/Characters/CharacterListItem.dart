@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_n_morty_fan_app/Models/Character.dart';
 import 'package:rick_n_morty_fan_app/Screens/Characters/ShowCharacter.dart';
-import 'package:rick_n_morty_fan_app/bloc/character_bloc/bloc/character_bloc.dart';
 
 class CharacterListItem extends StatelessWidget {
   const CharacterListItem({super.key, required this.character});
@@ -52,10 +50,10 @@ class CharacterListItem extends StatelessWidget {
             ),
             dense: false,
             onTap: () {
-              context.read<CharacterBloc>().add(FetchCharacter(character.id!));
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ShowCharacter()),
+                MaterialPageRoute(
+                    builder: (context) => ShowCharacter(id: character.id!)),
               );
             },
           ),
