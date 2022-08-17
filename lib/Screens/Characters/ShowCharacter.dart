@@ -86,10 +86,8 @@ class _ShowCharacterState extends State<ShowCharacter> {
                                 Container(
                                     color: Colors.blueGrey[800],
                                     height: 110,
-                                    child: Flexible(
-                                      child: CharacterDetails(
-                                          char: state.character!),
-                                    )),
+                                    child: CharacterDetails(
+                                        char: state.character!)),
                               ],
                             );
                     })),
