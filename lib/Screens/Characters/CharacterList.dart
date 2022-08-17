@@ -80,9 +80,22 @@ class _CharactersListState extends State<CharactersList> {
                                           .add(PreviousPage());
                                     });
                                   }),
-                        Text(
-                          "${state.currentPage ?? 1}/${state.pageInfo?.pages}",
-                          style: const TextStyle(color: Colors.white),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              // On pressed scroll to top and get next page from bloc
+                              _scrollController.animateTo(
+                                _scrollController.position.minScrollExtent,
+                                curve: Curves.easeOut,
+                                duration: const Duration(milliseconds: 500),
+                              );
+                              context.read<PageBloc>().add(GoToFirstPage());
+                            });
+                          },
+                          child: Text(
+                            "${state.currentPage ?? 1}/${state.pageInfo?.pages}",
+                            style: const TextStyle(color: Colors.white),
+                          ),
                         ),
                         IconButton(
                             splashColor: Colors.transparent,

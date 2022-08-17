@@ -9,3 +9,5 @@ class FetchPage extends PagesEvent {}
 class PreviousPage extends FetchPage {}
 
 class NextPage extends FetchPage {}
+
+class GoToFirstPage extends FetchPage {}

@@ -23,6 +23,8 @@ class PageBloc extends Bloc<PagesEvent, PageState> {
         transformer: throttleDroppable(throttleDuration));
     on<NextPage>(_fetchNextPage,
         transformer: throttleDroppable(throttleDuration));
+    on<GoToFirstPage>(_getFirstPage,
+        transformer: throttleDroppable(throttleDuration));
   }
 
   final http.Client httpClient;
@@ -60,22 +62,20 @@ class PageBloc extends Bloc<PagesEvent, PageState> {
 
   Future<void> _fetchNextPage(FetchPage event, Emitter<PageState> emit) async {
     try {
-      var page = state.pageInfo;
-
       // if there is no data in the state, request the first page
-      if (page == null || state.status == Status.initial) {
+      if (state.pageInfo == null || state.status == Status.initial) {
         final newPage = await _fetchPage(1);
         return emit(
           state.newPageInfo(
               status: Status.success,
               pageInfo: newPage.info,
-              characters: List.of(state.characters)..addAll(newPage.results!),
+              characters: newPage.results!,
               hasReachedMax: false,
               currentPage: 1),
         );
       }
 
-      var requestedPage = _getLinkPage(page.next!);
+      var requestedPage = _getLinkPage(state.pageInfo!.next!);
 
       final newPage = await _fetchPage(requestedPage);
 
@@ -88,6 +88,12 @@ class PageBloc extends Bloc<PagesEvent, PageState> {
     } catch (e) {
       emit(state.newPageInfo(status: Status.failure));
     }
+  }
+
+  Future<void> _getFirstPage(FetchPage event, Emitter<PageState> emit) async {
+    state.status = Status.initial;
+    // set the status to initial so the fetch next page method asks for the first page
+    await _fetchNextPage(event, emit);
   }
 
   Future<ApiPage> _fetchPage(int page) async {

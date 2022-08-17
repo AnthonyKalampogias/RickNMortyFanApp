@@ -12,12 +12,8 @@ class Pager extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey[900],
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (_) => PageBloc(httpClient: http.Client())..add(NextPage()),
-          ),
-        ],
+      body: BlocProvider(
+        create: (_) => PageBloc(httpClient: http.Client())..add(NextPage()),
         child: const CharactersList(),
       ),
     );
