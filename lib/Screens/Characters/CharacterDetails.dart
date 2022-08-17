@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rick_n_morty_fan_app/Models/Character.dart';
 
 class CharacterDetails extends StatefulWidget {
-  CharacterDetails({super.key, required Character this.char});
+  CharacterDetails({super.key, required this.char});
 
   late Character char;
   @override
@@ -14,7 +14,6 @@ class _CharacterDetailsState extends State<CharacterDetails> {
   Widget build(BuildContext context) {
     var character = widget.char;
     return ListView(
-      shrinkWrap: true,
       children: [
         Padding(
             padding: const EdgeInsets.only(bottom: 5),

@@ -20,7 +20,7 @@ class _ErrorPageState extends State<ErrorPage> {
   @override
   Widget build(BuildContext context) {
     Timer(
-        // if Loading is up for 30 seconds redirect to error page
+        // if Loading is up for 10 seconds redirect to error page
         const Duration(seconds: 10),
         () => setState(() {
               showButton = true;
