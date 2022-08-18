@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rick_n_morty_fan_app/Models/StatusEnum.dart';
 import 'package:rick_n_morty_fan_app/Screens/Shared/errorPage.dart';
 import 'package:rick_n_morty_fan_app/bloc/page_blocs/pages_bloc.dart';
 import 'CharacterListItem.dart';

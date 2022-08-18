@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rick_n_morty_fan_app/Models/StatusEnum.dart';
 import 'package:rick_n_morty_fan_app/Screens/Characters/CharacterDetails.dart';
 import 'package:rick_n_morty_fan_app/Screens/Shared/Loading.dart';
+import 'package:rick_n_morty_fan_app/Screens/Shared/errorPage.dart';
 import 'package:rick_n_morty_fan_app/bloc/character_bloc/character_bloc.dart';
 
 class ShowCharacter extends StatefulWidget {
@@ -16,23 +18,21 @@ class _ShowCharacterState extends State<ShowCharacter> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.blueGrey[900],
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                BlocProvider(
-                  create: (_) =>
-                      CharacterBloc()..add(FetchCharacter(widget.id)),
-                  child: Builder(
-                    builder: (context) =>
-                        (BlocBuilder<CharacterBloc, CharacterState>(
-                            builder: (context, state) {
-                      return state.character == null
-                          ? const Loading()
-                          : Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
+      backgroundColor: Colors.blueGrey[900],
+      body: BlocProvider(
+        create: (_) => CharacterBloc()..add(FetchCharacter(widget.id)),
+        child: Builder(
+          builder: (context) => (BlocBuilder<CharacterBloc, CharacterState>(
+              builder: (context, state) {
+            return state.status == Status.failure
+                ? ErrorPage(error: "Couldn't find character")
+                : state.character == null
+                    ? const Loading()
+                    : SafeArea(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 10),
@@ -89,30 +89,32 @@ class _ShowCharacterState extends State<ShowCharacter> {
                                     child: CharacterDetails(
                                         char: state.character!)),
                               ],
-                            );
-                    })),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
-                        fixedSize: const Size(300, 50),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50))),
-                    child: const Text(
-                      "Back to list",
-                      style: TextStyle(color: Colors.black, fontSize: 25),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ));
+                            ),
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  Navigator.pop(context);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.green,
+                                    fixedSize: const Size(300, 50),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50))),
+                                child: const Text(
+                                  "Back to list",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 25),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+          })),
+        ),
+      ),
+    );
   }
 }

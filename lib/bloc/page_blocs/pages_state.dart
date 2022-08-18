@@ -1,7 +1,5 @@
 part of 'pages_bloc.dart';
 
-enum Status { initial, success, failure }
-
 class PageState {
   PageState({
     this.status = Status.initial,

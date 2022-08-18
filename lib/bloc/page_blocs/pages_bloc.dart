@@ -5,6 +5,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:http/http.dart' as http;
 import 'package:rick_n_morty_fan_app/Models/ApiPage.dart';
 import 'package:rick_n_morty_fan_app/Models/Character.dart';
+import 'package:rick_n_morty_fan_app/Models/StatusEnum.dart';
 import 'package:stream_transform/stream_transform.dart';
 part 'pages_event.dart';
 part 'pages_state.dart';

@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_n_morty_fan_app/Models/Character.dart';
 import 'package:http/http.dart' as http;
+import 'package:rick_n_morty_fan_app/Models/StatusEnum.dart';
 
 part 'character_event.dart';
 part 'character_state.dart';
@@ -21,12 +22,13 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   ) async {
     try {
       if (event.id <= 0) {
-        throw Exception('error fetching newPage');
+        emit(state.setNewCharacter(status: Status.failure));
       }
       var char = await _fetchCharacter(event.id);
       emit(state.setNewCharacter(character: char));
     } catch (e) {
       print(e);
+      emit(state.setNewCharacter(status: Status.failure));
     }
   }
 

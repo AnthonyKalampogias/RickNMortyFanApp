@@ -75,7 +75,9 @@ class CharacterListItem extends StatelessWidget {
                         const TextSpan(
                             text: "Last Known Location: \n",
                             style: TextStyle(color: Colors.grey)),
-                        TextSpan(text: character.location!.name),
+                        TextSpan(
+                            text: character.location!.name,
+                            style: const TextStyle(fontSize: 12.0)),
                       ]),
                     ),
                     RichText(
@@ -85,6 +87,7 @@ class CharacterListItem extends StatelessWidget {
                             style: TextStyle(color: Colors.grey)),
                         TextSpan(
                           text: character.origin!.name,
+                          style: const TextStyle(fontSize: 12.0),
                         ),
                       ]),
                     ),
